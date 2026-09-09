@@ -781,171 +781,183 @@ export default function App() {
 
   return (
     <div className={`min-h-screen w-full ${rootBg} flex flex-col items-center font-sans select-none`}>
-      {/* Nav bar row 1 */}
-      <div className={`sticky top-0 z-40 w-full flex justify-center backdrop-blur-xl ${toolbarBg} border-b shadow-sm`}>
-        <div className="w-full max-w-6xl flex items-center gap-2 px-4 py-2 overflow-x-auto">
-          <span className={`text-[15px] font-semibold ${textMain} mr-1 whitespace-nowrap`}>Paint Pro</span>
+     <div className="sticky top-0 z-40 w-full flex justify-center px-4 pt-4 pb-2">
+       <div className={`w-full max-w-6xl rounded-[28px] border shadow-[0_18px_50px_rgba(15,23,42,0.18)] backdrop-blur-2xl ${toolbarBg}`}>
+         <div className="flex items-center gap-3 px-3 py-2.5 overflow-x-auto">
+           <div className={`flex items-center gap-2 pr-3 border-r ${dark ? "border-white/10" : "border-black/10"}`}>
+             <span className="h-3 w-3 rounded-full bg-[#ff5f57] shadow-[inset_0_1px_1px_rgba(0,0,0,0.2)]" />
+             <span className="h-3 w-3 rounded-full bg-[#febc2e] shadow-[inset_0_1px_1px_rgba(0,0,0,0.2)]" />
+             <span className="h-3 w-3 rounded-full bg-[#28c840] shadow-[inset_0_1px_1px_rgba(0,0,0,0.2)]" />
+           </div>
 
-          <div className="flex items-center gap-1">
-            <IconButton title="New" onClick={() => setNewProjectOpen(true)} dark={dark}>
-              <FilePlus2 size={16} />
-            </IconButton>
-            <IconButton title="Save" onClick={saveProject} dark={dark}>
-              <Save size={16} />
-            </IconButton>
-            <IconButton title="Load" onClick={loadProject} dark={dark}>
-              <FolderOpen size={16} />
-            </IconButton>
-          </div>
+           <span className={`text-[15px] font-semibold tracking-[-0.02em] ${textMain} whitespace-nowrap`}>Paint Pro</span>
 
-          <div className={`h-6 w-px ${dark ? "bg-white/10" : "bg-black/10"} mx-1`} />
+           <div className="flex items-center gap-1 ml-1">
+             <IconButton title="New" onClick={() => setNewProjectOpen(true)} dark={dark}>
+               <FilePlus2 size={16} />
+             </IconButton>
+             <IconButton title="Save" onClick={saveProject} dark={dark}>
+               <Save size={16} />
+             </IconButton>
+             <IconButton title="Load" onClick={loadProject} dark={dark}>
+               <FolderOpen size={16} />
+             </IconButton>
+           </div>
 
-          <div className={`flex items-center rounded-full p-1 gap-0.5 ${dark ? "bg-white/5" : "bg-gray-100/80"}`}>
-            {TOOLS.map(({ id, icon: Icon, label }) => (
-              <IconButton key={id} title={label} active={tool === id} onClick={() => setTool(id)} dark={dark}>
-                <Icon size={16} strokeWidth={2} />
-              </IconButton>
-            ))}
-          </div>
+           <div className={`h-6 w-px ${dark ? "bg-white/10" : "bg-black/10"} mx-1`} />
 
-          <div className={`h-6 w-px ${dark ? "bg-white/10" : "bg-black/10"} mx-1`} />
+           <div className={`flex items-center rounded-full p-1 gap-0.5 ${dark ? "bg-white/5" : "bg-gray-100/80"}`}>
+             {TOOLS.map(({ id, icon: Icon, label }) => (
+               <IconButton key={id} title={label} active={tool === id} onClick={() => setTool(id)} dark={dark}>
+                 <Icon size={16} strokeWidth={2} />
+               </IconButton>
+             ))}
+           </div>
 
-          <div className="flex items-center gap-1.5">
-            {PRESET_COLORS.map((c) => (
-              <button
-                key={c}
-                onClick={() => setColor(c)}
-                className={`w-5 h-5 rounded-full border ${
-                  color === c ? "ring-2 ring-[#0A84FF] ring-offset-1" : "border-black/10"
-                }`}
-                style={{ backgroundColor: c }}
-              />
-            ))}
-            <input
-              type="color"
-              value={color}
-              onChange={(e) => setColor(e.target.value)}
-              className="w-6 h-6 rounded-full overflow-hidden cursor-pointer border border-black/10"
-            />
-          </div>
+           <div className={`h-6 w-px ${dark ? "bg-white/10" : "bg-black/10"} mx-1`} />
 
-          <div className={`h-6 w-px ${dark ? "bg-white/10" : "bg-black/10"} mx-1`} />
+           <div className="flex items-center gap-1.5">
+             {PRESET_COLORS.map((c) => (
+               <button
+                 key={c}
+                 onClick={() => setColor(c)}
+                 className={`w-5 h-5 rounded-full border ${
+                   color === c ? "ring-2 ring-[#0A84FF] ring-offset-1" : "border-black/10"
+                 }`}
+                 style={{ backgroundColor: c }}
+               />
+             ))}
+             <input
+               type="color"
+               value={color}
+               onChange={(e) => setColor(e.target.value)}
+               className="w-6 h-6 rounded-full overflow-hidden cursor-pointer border border-black/10"
+             />
+           </div>
 
-          <IconButton title="Undo (Ctrl+Z)" onClick={undo} dark={dark} disabled={undoStack.length === 0}>
-            <Undo2 size={16} />
-          </IconButton>
-          <IconButton title="Redo (Ctrl+Shift+Z)" onClick={redo} dark={dark} disabled={redoStack.length === 0}>
-            <Redo2 size={16} />
-          </IconButton>
-          <IconButton title="Clear layer" onClick={clearActiveLayer} dark={dark}>
-            <Trash2 size={16} />
-          </IconButton>
-          <IconButton title="Layers" active={panelOpen} onClick={() => setPanelOpen((p) => !p)} dark={dark}>
-            <LayersIcon size={16} />
-          </IconButton>
-          <IconButton title={dark ? "Light mode" : "Dark mode"} onClick={() => setDark((d) => !d)} dark={dark}>
-            {dark ? <Sun size={16} /> : <Moon size={16} />}
-          </IconButton>
+           <div className={`h-6 w-px ${dark ? "bg-white/10" : "bg-black/10"} mx-1`} />
 
-          <button
-            onClick={exportImage}
-            className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-[#0A84FF] text-white text-[13px] font-medium hover:bg-[#0074E0] whitespace-nowrap ml-1"
-          >
-            <Download size={15} /> Export
-          </button>
-        </div>
-      </div>
+           <div className="flex items-center gap-1">
+             <IconButton title="Undo (Ctrl+Z)" onClick={undo} dark={dark} disabled={undoStack.length === 0}>
+               <Undo2 size={16} />
+             </IconButton>
+             <IconButton title="Redo (Ctrl+Shift+Z)" onClick={redo} dark={dark} disabled={redoStack.length === 0}>
+               <Redo2 size={16} />
+             </IconButton>
+             <IconButton title="Clear layer" onClick={clearActiveLayer} dark={dark}>
+               <Trash2 size={16} />
+             </IconButton>
+             <IconButton title="Layers" active={panelOpen} onClick={() => setPanelOpen((p) => !p)} dark={dark}>
+               <LayersIcon size={16} />
+             </IconButton>
+             <IconButton title={dark ? "Light mode" : "Dark mode"} onClick={() => setDark((d) => !d)} dark={dark}>
+               {dark ? <Sun size={16} /> : <Moon size={16} />}
+             </IconButton>
+           </div>
 
-      {/* Nav bar row 2: brush settings + zoom */}
-      <div className={`sticky top-[45px] z-30 w-full flex justify-center backdrop-blur-xl ${toolbarBg} border-b`}>
-        <div className="w-full max-w-6xl flex items-center gap-3 px-4 py-1.5 overflow-x-auto text-[12px]">
-          {(tool === "brush" || tool === "eraser") && (
-            <>
-              {tool === "brush" && (
-                <div className="flex items-center gap-1.5">
-                  <span className={dark ? "text-gray-400" : "text-gray-500"}>Type</span>
-                  <select
-                    value={brushType}
-                    onChange={(e) => setBrushType(e.target.value)}
-                    className={`rounded-md px-1.5 py-0.5 border text-[12px] ${
-                      dark ? "bg-gray-800 border-white/10 text-gray-100" : "bg-white border-black/10"
-                    }`}
-                  >
-                    {BRUSH_TYPES.map((b) => (
-                      <option key={b} value={b}>
-                        {b}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              )}
-              <div className="flex items-center gap-1.5">
-                <span className={dark ? "text-gray-400" : "text-gray-500"}>Size</span>
-                <span
-                  className="rounded-full bg-gray-500 inline-block"
-                  style={{ width: Math.min(brushSize, 20), height: Math.min(brushSize, 20) }}
-                />
-                <input
-                  type="range"
-                  min={1}
-                  max={80}
-                  value={brushSize}
-                  onChange={(e) => setBrushSize(Number(e.target.value))}
-                  className="w-20 accent-[#0A84FF]"
-                />
-              </div>
-              <div className="flex items-center gap-1.5">
-                <span className={dark ? "text-gray-400" : "text-gray-500"}>Opacity</span>
-                <input
-                  type="range"
-                  min={0.05}
-                  max={1}
-                  step={0.05}
-                  value={opacity}
-                  onChange={(e) => setOpacity(Number(e.target.value))}
-                  className="w-16 accent-[#0A84FF]"
-                />
-              </div>
-              {tool === "brush" && (
-                <div className="flex items-center gap-1.5">
-                  <span className={dark ? "text-gray-400" : "text-gray-500"}>Hardness</span>
-                  <input
-                    type="range"
-                    min={0.1}
-                    max={1}
-                    step={0.05}
-                    value={hardness}
-                    onChange={(e) => setHardness(Number(e.target.value))}
-                    className="w-16 accent-[#0A84FF]"
-                  />
-                </div>
-              )}
-              <div className={`h-5 w-px ${dark ? "bg-white/10" : "bg-black/10"}`} />
-            </>
-          )}
+           <div className="ml-auto flex items-center gap-2">
+             <button
+               onClick={exportImage}
+               className="flex items-center gap-1.5 rounded-full bg-[#0A84FF] px-3 py-1.5 text-[12px] font-medium text-white shadow-[0_8px_20px_rgba(10,132,255,0.35)] transition-transform hover:scale-[1.02] whitespace-nowrap"
+             >
+               <Download size={14} /> Export
+             </button>
+           </div>
+         </div>
+       </div>
+     </div>
 
-          <div className="flex items-center gap-1 ml-auto">
-            <IconButton title="Zoom out (Ctrl -)" onClick={() => setZoom((z) => clamp(z - 0.1, 0.25, 4))} dark={dark}>
-              <ZoomOut size={15} />
-            </IconButton>
-            <button
-              onClick={() => {
-                setZoom(1);
-                setPan({ x: 0, y: 0 });
-              }}
-              className={`text-[11px] w-12 text-center ${dark ? "text-gray-300" : "text-gray-600"}`}
-            >
-              {Math.round(zoom * 100)}%
-            </button>
-            <IconButton title="Zoom in (Ctrl +)" onClick={() => setZoom((z) => clamp(z + 0.1, 0.25, 4))} dark={dark}>
-              <ZoomIn size={15} />
-            </IconButton>
-            <span className={`ml-2 text-[11px] whitespace-nowrap ${dark ? "text-gray-500" : "text-gray-400"}`}>
-              hold Space to pan
-            </span>
-          </div>
-        </div>
-      </div>
+     <div className="sticky top-[82px] z-30 w-full flex justify-center px-4 pb-3">
+       <div className={`w-full max-w-6xl rounded-[22px] border backdrop-blur-2xl ${toolbarBg}`}>
+         <div className="flex items-center gap-3 px-3 py-1.5 overflow-x-auto text-[12px]">
+           {(tool === "brush" || tool === "eraser") && (
+             <>
+               {tool === "brush" && (
+                 <div className="flex items-center gap-1.5">
+                   <span className={dark ? "text-gray-400" : "text-gray-500"}>Type</span>
+                   <select
+                     value={brushType}
+                     onChange={(e) => setBrushType(e.target.value)}
+                     className={`rounded-md px-1.5 py-0.5 border text-[12px] ${
+                       dark ? "bg-gray-800 border-white/10 text-gray-100" : "bg-white border-black/10"
+                     }`}
+                   >
+                     {BRUSH_TYPES.map((b) => (
+                       <option key={b} value={b}>
+                         {b}
+                       </option>
+                     ))}
+                   </select>
+                 </div>
+               )}
+               <div className="flex items-center gap-1.5">
+                 <span className={dark ? "text-gray-400" : "text-gray-500"}>Size</span>
+                 <span
+                   className="rounded-full bg-gray-500 inline-block"
+                   style={{ width: Math.min(brushSize, 20), height: Math.min(brushSize, 20) }}
+                 />
+                 <input
+                   type="range"
+                   min={1}
+                   max={80}
+                   value={brushSize}
+                   onChange={(e) => setBrushSize(Number(e.target.value))}
+                   className="w-20 accent-[#0A84FF]"
+                 />
+               </div>
+               <div className="flex items-center gap-1.5">
+                 <span className={dark ? "text-gray-400" : "text-gray-500"}>Opacity</span>
+                 <input
+                   type="range"
+                   min={0.05}
+                   max={1}
+                   step={0.05}
+                   value={opacity}
+                   onChange={(e) => setOpacity(Number(e.target.value))}
+                   className="w-16 accent-[#0A84FF]"
+                 />
+               </div>
+               {tool === "brush" && (
+                 <div className="flex items-center gap-1.5">
+                   <span className={dark ? "text-gray-400" : "text-gray-500"}>Hardness</span>
+                   <input
+                     type="range"
+                     min={0.1}
+                     max={1}
+                     step={0.05}
+                     value={hardness}
+                     onChange={(e) => setHardness(Number(e.target.value))}
+                     className="w-16 accent-[#0A84FF]"
+                   />
+                 </div>
+               )}
+               <div className={`h-5 w-px ${dark ? "bg-white/10" : "bg-black/10"}`} />
+             </>
+           )}
+
+           <div className="flex items-center gap-1 ml-auto">
+             <IconButton title="Zoom out (Ctrl -)" onClick={() => setZoom((z) => clamp(z - 0.1, 0.25, 4))} dark={dark}>
+               <ZoomOut size={15} />
+             </IconButton>
+             <button
+               onClick={() => {
+                 setZoom(1);
+                 setPan({ x: 0, y: 0 });
+               }}
+               className={`text-[11px] w-12 text-center ${dark ? "text-gray-300" : "text-gray-600"}`}
+             >
+               {Math.round(zoom * 100)}%
+             </button>
+             <IconButton title="Zoom in (Ctrl +)" onClick={() => setZoom((z) => clamp(z + 0.1, 0.25, 4))} dark={dark}>
+               <ZoomIn size={15} />
+             </IconButton>
+             <span className={`ml-2 text-[11px] whitespace-nowrap ${dark ? "text-gray-500" : "text-gray-400"}`}>
+               hold Space to pan
+             </span>
+           </div>
+         </div>
+       </div>
+     </div>
 
       {/* Main area */}
       <div className="flex-1 w-full flex items-start justify-center gap-6 py-8 px-4">
